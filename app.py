@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+
 
 app = Flask(__name__)
-app.secret_key = "pikda123"
 
-# ======================================
+app.secret_key = "pikda-secret-key"
+
+
+# =========================
 # DATA PRODUK
-# ======================================
+# =========================
 
 products = [
 
@@ -13,79 +17,52 @@ products = [
         "id": 1,
         "nama": "PIKDA Original",
         "harga": 15000,
-        "gambar": "hero.png",
-        "berat": "100 Gram",
+        "berat": "100 gram",
         "stok": 50,
-        "deskripsi": "Keripik singkong premium dengan bumbu lada khas PIKDA."
+        "gambar": "hero.png",
+        "deskripsi": "Keripik singkong premium dengan rasa lada khas PIKDA yang gurih, renyah, dan pedas alami."
     },
 
     {
         "id": 2,
-        "nama": "PIKDA Extra Pedas",
-        "harga": 18000,
+        "nama": "PIKDA Pedas Level 2",
+        "harga": 17000,
+        "berat": "100 gram",
+        "stok": 40,
         "gambar": "hero.png",
-        "berat": "100 Gram",
-        "stok": 35,
-        "deskripsi": "Varian extra pedas untuk pecinta makanan pedas."
+        "deskripsi": "Sensasi pedas lada pilihan dengan cita rasa kuat yang bikin nagih."
     },
 
     {
         "id": 3,
-        "nama": "PIKDA Family Pack",
-        "harga": 28000,
+        "nama": "PIKDA Extra Pedas",
+        "harga": 20000,
+        "berat": "100 gram",
+        "stok": 30,
         "gambar": "hero.png",
-        "berat": "250 Gram",
-        "stok": 20,
-        "deskripsi": "Kemasan besar cocok untuk keluarga."
-    },
-
-    {
-        "id": 4,
-        "nama": "PIKDA Balado",
-        "harga": 16000,
-        "gambar": "hero.png",
-        "berat": "100 Gram",
-        "stok": 40,
-        "deskripsi": "Rasa balado gurih pedas."
-    },
-
-    {
-        "id": 5,
-        "nama": "PIKDA BBQ",
-        "harga": 17000,
-        "gambar": "hero.png",
-        "berat": "100 Gram",
-        "stok": 25,
-        "deskripsi": "Rasa barbeque favorit semua kalangan."
-    },
-
-    {
-        "id": 6,
-        "nama": "PIKDA Mix Pack",
-        "harga": 40000,
-        "gambar": "hero.png",
-        "berat": "300 Gram",
-        "stok": 15,
-        "deskripsi": "Paket isi berbagai varian rasa."
+        "deskripsi": "Varian khusus bagi pecinta pedas dengan bumbu lada lebih berani."
     }
 
 ]
 
-# ======================================
+
+# =========================
 # HOME
-# ======================================
+# =========================
 
 @app.route("/")
 def home():
 
     return render_template(
         "home.html",
-        products=products[:3]
+        products=products
     )
 
-# ======================================
-# SEMUA PRODUK
-# ======================================
+
+
+# =========================
+# PRODUCTS
+# =========================
 
 @app.route("/products")
 def products_page():
@@ -94,26 +71,29 @@ def products_page():
         "products.html",
         products=products
     )
-# ======================================
+
+
+
+# =========================
 # DETAIL PRODUK
-# ======================================
+# =========================
 
 @app.route("/product/<int:id>")
 def product_detail(id):
 
     product = None
 
-    for p in products:
+    for item in products:
 
-        if p["id"] == id:
-
-            product = p
-
+        if item["id"] == id:
+            product = item
             break
+
 
     if product is None:
 
-        return "Produk tidak ditemukan", 404
+        return render_template("404.html"), 404
+
 
     return render_template(
         "product_detail.html",
@@ -121,56 +101,45 @@ def product_detail(id):
     )
 
 
-# ======================================
-# CHECKOUT
-# ======================================
 
-@app.route("/checkout/<int:id>", methods=["GET", "POST"])
+# =========================
+# CHECKOUT
+# =========================
+
+@app.route("/checkout/<int:id>", methods=["GET","POST"])
 def checkout(id):
 
     product = None
 
-    for p in products:
 
-        if p["id"] == id:
+    for item in products:
 
-            product = p
-
+        if item["id"] == id:
+            product = item
             break
+
+
 
     if product is None:
 
-        return "Produk tidak ditemukan",404
+        return render_template("404.html"), 404
+
+
 
     if request.method == "POST":
 
-        nama = request.form.get("nama")
-        email = request.form.get("email")
-        hp = request.form.get("hp")
-        alamat = request.form.get("alamat")
-        jumlah = request.form.get("jumlah")
-        pembayaran = request.form.get("pembayaran")
-
-        if not nama or not email or not hp or not alamat:
-
-            flash(
-                "Semua data wajib diisi!",
-                "danger"
-            )
-
-            return redirect(
-                url_for(
-                    "checkout",
-                    id=id
-                )
-            )
+        nama = request.form["nama"]
 
         flash(
-            "Pesanan berhasil dibuat!",
+            f"Pesanan berhasil dibuat. Terima kasih {nama}!",
             "success"
         )
 
-        return redirect("/")
+        return redirect(
+            url_for("home")
+        )
+
+
 
     return render_template(
         "checkout.html",
@@ -178,9 +147,10 @@ def checkout(id):
     )
 
 
-# ======================================
-# ERROR PAGE
-# ======================================
+
+# =========================
+# ERROR 404
+# =========================
 
 @app.errorhandler(404)
 def not_found(error):
@@ -190,12 +160,23 @@ def not_found(error):
     ),404
 
 
-# ======================================
+
+# =========================
 # RUN
-# ======================================
+# =========================
 
 if __name__ == "__main__":
 
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
+
     app.run(
-        debug=True
+        host="0.0.0.0",
+        port=port,
+        debug=False
     )
