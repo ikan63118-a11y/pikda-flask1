@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-6">
+
+                <span class="badge bg-warning text-dark mb-3">
+
+                    Produk Lokal Indonesia 🇮🇩
+
+                </span>
+
+                <h1>
+
+                    Keripik Lada Premium
+                    dengan Rasa Pedas
+                    yang Bikin Nagih
+
+                </h1>
+
+                <p>
+
+                    PIKDA hadir dengan bahan pilihan,
+                    tekstur renyah,
+                    dan bumbu lada khas
+                    yang memberikan sensasi pedas
+                    gurih di setiap gigitan.
+
+                </p>
+
+                <div class="mt-4">
+
+                    <a href="{{ url_for('products_page') }}"
+                       class="btn btn-danger btn-lg me-3">
+
+                        <i class="bi bi-bag-fill"></i>
+
+                        Belanja Sekarang
+
+                    </a>
+
+                    <a href="#unggulan"
+                       class="btn btn-outline-light btn-lg">
+
+                        Lihat Produk
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 text-center">
+
+                <img
+                    src="{{ url_for('static', filename='images/hero.png') }}"
+                    class="img-fluid hero-image">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= PRODUK UNGGULAN ================= -->
+
+<section id="unggulan" class="produk-home">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2>
+
+                Produk Unggulan
+
+            </h2>
+
+            <p>
+
+                Produk favorit pelanggan kami.
+
+            </p>
+
+        </div>
+
+        <div class="row">
+            {% for product in products %}
+
+<div class="col-lg-4 col-md-6 mb-4">
+
+    <div class="card product-card h-100 shadow">
+
+        <img src="{{ url_for('static', filename='images/' + product.gambar) }}"
+             class="card-img-top p-4"
+             alt="{{ product.nama }}">
+
+        <div class="card-body">
+
+            <h4>
+
+                {{ product.nama }}
+
+            </h4>
+
+            <p>
+
+                {{ product.deskripsi }}
+
+            </p>
+
+            <h3 class="text-danger fw-bold">
+
+                Rp {{ "{:,}".format(product.harga).replace(",", ".") }}
+
+            </h3>
+
+            <div class="mt-4 d-grid gap-2">
+
+                <a href="{{ url_for('product_detail', id=product.id) }}"
+                   class="btn btn-dark">
+
+                    <i class="bi bi-eye-fill"></i>
+
+                    Detail Produk
+
+                </a>
+
+                <a href="{{ url_for('checkout', id=product.id) }}"
+                   class="btn btn-danger">
+
+                    <i class="bi bi-cart-fill"></i>
+
+                    Beli Sekarang
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+<section class="cta">
+
+    <div class="container text-center">
+
+        <h2>
+
+            Siap Merasakan Pedasnya PIKDA?
+
+        </h2>
+
+        <p>
+
+            Yuk pilih varian favoritmu dan nikmati keripik lada dengan cita rasa premium yang gurih, renyah, dan bikin nagih.
+
+        </p>
+
+        <a href="{{ url_for('products_page') }}"
+           class="btn btn-warning btn-lg">
+
+            <i class="bi bi-bag-heart-fill"></i>
+
+            Lihat Semua Produk
+
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="detail-page">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-6 text-center mb-5">
+
+                <img src="{{ url_for('static', filename='images/' + product.gambar) }}"
+                     class="img-fluid detail-image"
+                     alt="{{ product.nama }}">
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <span class="badge bg-danger mb-3">
+
+                    Produk PIKDA
+
+                </span>
+
+                <h1>
+
+                    {{ product.nama }}
+
+                </h1>
+
+                <h2 class="text-danger fw-bold my-4">
+
+                    Rp {{ "{:,}".format(product.harga).replace(",", ".") }}
+
+                </h2>
+
+                <table class="table table-borderless">
+
+                    <tr>
+
+                        <th width="150">
+
+                            Berat
+
+                        </th>
+
+                        <td>
+
+                            {{ product.berat }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            Stok
+
+                        </th>
+
+                        <td>
+
+                            {{ product.stok }}
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+                <p class="mt-4">
+
+                    {{ product.deskripsi }}
+
+                </p>
+
+                <div class="mt-4">
+                                        <a href="{{ url_for('checkout', id=product.id) }}"
+                       class="btn btn-danger btn-lg me-3">
+
+                        <i class="bi bi-cart-fill"></i>
+
+                        Beli Sekarang
+
+                    </a>
+
+                    <a href="{{ url_for('products_page') }}"
+                       class="btn btn-outline-dark btn-lg">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Kembali
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= KEUNGGULAN ================= -->
+
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="row text-center">
+
+            <div class="col-lg-4 mb-4">
+
+                <i class="bi bi-award-fill display-4 text-danger"></i>
+
+                <h4 class="mt-3">
+
+                    Kualitas Premium
+
+                </h4>
+
+                <p>
+
+                    Menggunakan bahan baku pilihan dengan proses produksi yang higienis.
+
+                </p>
+
+            </div>
+
+            <div class="col-lg-4 mb-4">
+
+                <i class="bi bi-fire display-4 text-danger"></i>
+
+                <h4 class="mt-3">
+
+                    Rasa Khas
+
+                </h4>
+
+                <p>
+
+                    Perpaduan gurih dan pedas lada yang menjadi ciri khas PIKDA.
+
+                </p>
+
+            </div>
+
+            <div class="col-lg-4 mb-4">
+
+                <i class="bi bi-truck display-4 text-danger"></i>
+
+                <h4 class="mt-3">
+
+                    Pengiriman Cepat
+
+                </h4>
+
+                <p>
+
+                    Produk dikemas dengan aman agar sampai ke tangan pelanggan dalam kondisi terbaik.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
